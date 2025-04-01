@@ -40,10 +40,13 @@ def spacy_summarizer(rawdocs):
             else:
                 word_freq[word.text] += 1
 
+    if not word_freq:
+        return ""  # if text is empty or stopwords only
+
     max_freq = max(word_freq.values())
 
     for word in word_freq.keys():
-        word_freq[word] = word_freq[word]/max_freq
+        word_freq[word] = word_freq[word] / max_freq
 
     sent_tokens = [sent for sent in doc.sents]
     sent_scores = {}
@@ -55,10 +58,9 @@ def spacy_summarizer(rawdocs):
                 else:
                     sent_scores[sent] += word_freq[word.text]
 
-    select_len = int(len(sent_tokens) * 0.3)
+    select_len = max(1, int(len(sent_tokens) * 0.3))  # always at least 1
 
     summary = nlargest(select_len, sent_scores, key=sent_scores.get)
-
     final_summary = [word.text for word in summary]
     summary = ' '.join(final_summary)
     return summary
