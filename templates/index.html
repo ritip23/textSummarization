@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Summarizer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Text Summarizer</h1>
+    <form method="POST" action="/summarize">
+      <textarea name="text" rows="10" placeholder="Paste your text here..." required>{{ original_text if original_text else '' }}</textarea>
+      
+      <select name="algorithm" required>
+        <option value="" disabled selected>Select Algorithm</option>
+        <option value="luhn" {% if selected_algorithm == 'luhn' %}selected{% endif %}>Luhn Summarizer</option>
+        <option value="bert" {% if selected_algorithm == 'bert' %}selected{% endif %}>BERT Summarizer</option>
+        <option value="spacy" {% if selected_algorithm == 'spacy' %}selected{% endif %}>SpaCy Extractive Summarizer</option>
+      </select>
+      
+      <button type="submit">Summarize</button>
+    </form>
+
+    {% if summary %}
+    <div class="result">
+      <h2>🔽 Summary</h2>
+      <p>{{ summary }}</p>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
